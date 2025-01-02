@@ -3,3 +3,6 @@ jepsen.etcd/store
 # Emacs
 *~
 
+# ssh
+id_rsa
+id_rsa.pub

@@ -1,4 +1,14 @@
+##@ Run
+.PHONY: etcdup
+etcdup: Dockerfile ##Build the etcd cluster then run it.
+	docker compose up --build -d
+
 ##@ Build
+Dockerfile: id_rsa.pub
+
+.PHONY: clean
+clean:## Clean up
+	rm -f id_rsa id_rsa.pub
 
 id_rsa.pub: id_rsa
 

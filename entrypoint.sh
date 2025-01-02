@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
+/sbin/sshd -D
 
-systemctl start sshd
