@@ -4,7 +4,6 @@
             [jepsen [client :as client]]
             [verschlimmbesserung.core :as v]))
 
-
 (defrecord Client [conn]
   client/Client
   (open! [this test node]

@@ -3,7 +3,7 @@
             [clojure.string :as str]
             [clojure.java.io :as io]
             [jepsen.control.docker :as docker]
-            [verschlimmbesserung.core :as v]            
+            [verschlimmbesserung.core :as v]
             [jepsen
              [cli :as cli]
              [control :as c]
@@ -60,26 +60,26 @@
 (defn db
   "Etcd DB for a particular version."
   [version]
-  
+
   (reify
     db/DB
     (setup! [_ test node]
       (l/info node "installing etcd" version)
       (c/su
-        (cu/start-daemon!
-         {:logfile logfile
-          :pidfile pidfile
-          :chdir   etcd-dir}
-         binary
-         :--log-outputs                  :stderr
-         :--name                         (-> node node-map :name) ;(node-map node)
-         :--listen-peer-urls             (-> node node-map :peer) ;(peer-url node)
-         :--listen-client-urls           (-> node node-map :client) ;(client-url node)
-         :--advertise-client-urls        (-> node node-map :client) ;(client-url node)
-         :--initial-cluster-state        :new
-         :--initial-advertise-peer-urls  (-> node node-map :peer) ;(peer-url node)
-         :--initial-cluster              (initial-cluster test))
-        (Thread/sleep 10000)))
+       (cu/start-daemon!
+        {:logfile logfile
+         :pidfile pidfile
+         :chdir   etcd-dir}
+        binary
+        :--log-outputs                  :stderr
+        :--name                         (-> node node-map :name) ;(node-map node)
+        :--listen-peer-urls             (-> node node-map :peer) ;(peer-url node)
+        :--listen-client-urls           (-> node node-map :client) ;(client-url node)
+        :--advertise-client-urls        (-> node node-map :client) ;(client-url node)
+        :--initial-cluster-state        :new
+        :--initial-advertise-peer-urls  (-> node node-map :peer) ;(peer-url node)
+        :--initial-cluster              (initial-cluster test))
+       (Thread/sleep 10000)))
     (teardown! [_ test node]
       (l/info node "tearing down etcd")
       (cu/stop-daemon! binary pidfile))
@@ -92,29 +92,19 @@
   "Given an options map from the command line runner (e.g. :nodes, :ssh,
   :concurrency, ...), constructs a test map."
   [opts]
-  (db "")
   (merge tests/noop-test
-         {
-          :name "etcd"
+         {:name "etcd"
           :os   debian/os
           :db   (db "v3.1.5")
           :pure-generators true
           :client (ec/Client. nil)}
-                                        ; private-key-path must be an absolute path
-         {:concurrency 5,
-          :leave-db-running? false,
-          :logging-json? false,
-          ;; :ssh {:dummy? false,
-          ;;       :username "root",
-          ;;       :strict-host-key-checking false
-          ;;       :port 8022
-          ;;       :private-key-path (.getAbsolutePath (io/file ".." "id_rsa"))
-          ;;       }
+         {:concurrency 5
+          :leave-db-running? false
+          :logging-json? false
           :nodes ["127.0.0.1:8379", "127.0.0.1:8380", "127.0.0.1:8381"]
           :test-count 1
           :time-limit 60}
-         {:remote docker/docker})
-  )
+         {:remote docker/docker}))
 
 (defn -main
   "Handles command line arguments. Can either run a test, or a web server for

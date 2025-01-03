@@ -8,5 +8,6 @@
                  [jepsen/jepsen "0.3.7"]
                  [verschlimmbesserung "0.1.3"]
                  ]
+  :plugins [[dev.weavejester/lein-cljfmt "0.13.0"]]  
   :main jepsen.etcd
   :repl-options {:init-ns jepsen.etcd})
