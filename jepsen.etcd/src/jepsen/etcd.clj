@@ -3,12 +3,17 @@
             [clojure.string :as str]
             [clojure.java.io :as io]
             [jepsen.control.docker :as docker]
-            [jepsen [cli :as cli]
+            [verschlimmbesserung.core :as v]            
+            [jepsen
+             [cli :as cli]
              [control :as c]
              [db :as db]
-             [tests :as tests]]
+             [tests :as tests]
+             [client :as client]]
             [jepsen.control.util :as cu]
-            [jepsen.os.debian :as debian]))
+            [jepsen.os.debian :as debian]
+            [jepsen.temp :as temp]
+             ))
 
 (def node-map {"127.0.0.1:8379" {:client "http://172.20.0.2:2379"
                                  :peer "http://172.20.0.2:2380"
@@ -20,6 +25,23 @@
                                  :peer "http://172.20.0.4:2380"
                                  :name "172.20.0.4"}})
 
+(defrecord Client [conn]
+  client/Client
+  (open! [this test node]
+    (assoc this :conn (v/connect (-> node node-map :client)
+                                 {:timeout 5000})))
+
+  (setup! [this test])
+
+  (invoke! [_ test op])
+
+  (teardown! [this test])
+
+  (close! [_ test]
+    ; If our connection were stateful, we'd close it here. Verschlimmmbesserung
+    ; doesn't actually hold connections, so there's nothing to close.
+    ))
+
 (defn initial-cluster
   "Constructs an initial cluster string for a test, like
   \"foo=foo:2380,bar=bar:2380,...\""
@@ -28,7 +50,7 @@
   (->> (:nodes test)
        (map (fn [node]
               #_(str node "=" (peer-url node))
-                (str (-> node node-map :name) "=" (-> node node-map :peer))))
+              (str (-> node node-map :name) "=" (-> node node-map :peer))))
        (str/join ",")))
 
 (def etcd-dir     "/opt/etcd")
@@ -66,7 +88,7 @@
     (log-files [_ test node-]
       [logfile])))
 
-; setupで前のデータをリセットしたほうがいい
+                                        ; setupで前のデータをリセットしたほうがいい
 (defn etcd-test
   "Given an options map from the command line runner (e.g. :nodes, :ssh,
   :concurrency, ...), constructs a test map."
@@ -77,8 +99,9 @@
           :name "etcd"
           :os   debian/os
           :db   (db "v3.1.5")
-          :pure-generators true}
-         ; private-key-path must be an absolute path
+          :pure-generators true
+          :client (temp/Client. nil)}
+                                        ; private-key-path must be an absolute path
          {:concurrency 5,
           :leave-db-running? false,
           :logging-json? false,
