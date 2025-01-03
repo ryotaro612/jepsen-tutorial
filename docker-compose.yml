@@ -2,20 +2,28 @@ services:
   etcd1:
     image: jepsen-tutorial-etcd:latest
     ports:
-      - 8022:22
+      - 8379:2379
     networks:
-      - etcd
+      etcd:
+        ipv4_address: 172.20.0.2
   etcd2:
     image: jepsen-tutorial-etcd:latest
     ports:
-      - 8023:22
+      - 8380:2379
     networks:
-      - etcd
+      etcd:
+        ipv4_address: 172.20.0.3
   etcd3:
     image: jepsen-tutorial-etcd:latest
     ports:
-      - 8024:22
+      - 8381:2379
     networks:
-      - etcd
+      etcd:
+        ipv4_address: 172.20.0.4
 networks:
   etcd:
+    driver: bridge
+    ipam:
+     driver: default
+     config:
+       - subnet: 172.20.0.0/24

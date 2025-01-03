@@ -3,7 +3,7 @@
 etcdup: buildetcd ##Build the etcd cluster then run it.
 	docker compose up -d
 
-etcdown: ##Down the etcd cluster.
+etcddown: ##Down the etcd cluster.
 	docker compose down -v
 
 ##@ Build
