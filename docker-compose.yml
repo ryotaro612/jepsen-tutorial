@@ -1,12 +1,21 @@
 services:
   etcd1:
-    build: .
+    image: jepsen-tutorial-etcd:latest
     ports:
-      - 8022:22    
-    # depends_on:
-    #   db:
-    #     condition: service_healthy
-    #     restart: true
-    #   redis:
-    #     condition: service_started
-
+      - 8022:22
+    networks:
+      - etcd
+  etcd2:
+    image: jepsen-tutorial-etcd:latest
+    ports:
+      - 8023:22
+    networks:
+      - etcd
+  etcd3:
+    image: jepsen-tutorial-etcd:latest
+    ports:
+      - 8024:22
+    networks:
+      - etcd
+networks:
+  etcd:
