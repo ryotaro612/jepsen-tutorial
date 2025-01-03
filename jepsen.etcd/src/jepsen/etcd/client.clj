@@ -1,4 +1,4 @@
-(ns jepsen.temp
+(ns jepsen.etcd.client
   (:require [clojure.tools.logging :refer :all]
             [clojure.string :as str]
             [jepsen [client :as client]]

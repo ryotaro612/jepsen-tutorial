@@ -12,8 +12,7 @@
              [client :as client]]
             [jepsen.control.util :as cu]
             [jepsen.os.debian :as debian]
-            [jepsen.temp :as temp]
-             ))
+            [jepsen.etcd.client :as ec]))
 
 (def node-map {"127.0.0.1:8379" {:client "http://172.20.0.2:2379"
                                  :peer "http://172.20.0.2:2380"
@@ -100,7 +99,7 @@
           :os   debian/os
           :db   (db "v3.1.5")
           :pure-generators true
-          :client (temp/Client. nil)}
+          :client (ec/Client. nil)}
                                         ; private-key-path must be an absolute path
          {:concurrency 5,
           :leave-db-running? false,
