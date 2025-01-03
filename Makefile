@@ -1,10 +1,15 @@
 ##@ Run
 .PHONY: etcdup
-etcdup: Dockerfile ##Build the etcd cluster then run it.
-	docker compose up --build -d
+etcdup: buildetcd ##Build the etcd cluster then run it.
+	docker compose up -d
+
+etcdown: ##Down the etcd cluster.
+	docker compose down -v
 
 ##@ Build
-Dockerfile: id_rsa.pub
+.PHONY:buildetcd
+buildetcd: ##Build the Docker image of etcd.
+	docker build --load -t jepsen-tutorial-etcd:latest .
 
 .PHONY: clean
 clean:## Clean up
