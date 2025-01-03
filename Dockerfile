@@ -9,7 +9,7 @@ RUN apt update && \
     mkdir -p /run/sshd
 COPY entrypoint.sh id_rsa.pub /
 ENV ETCD_VER=v3.5.17
-ENV ETCD_DIR=/root/etcd
+ENV ETCD_DIR=/opt/etcd
 RUN cat id_rsa.pub > /root/.ssh/authorized_keys && \
     rm id_rsa.pub && \
     rm -f /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz && \
