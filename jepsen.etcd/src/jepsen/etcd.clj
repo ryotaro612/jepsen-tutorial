@@ -111,6 +111,7 @@
   browsing results."
   [& args]
   (cli/run! (merge (cli/single-test-cmd {:test-fn etcd-test})
+                   ; launch a web server that serves the results of the tests
                    (cli/serve-cmd))
             args))
 

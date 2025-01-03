@@ -20,6 +20,12 @@ id_rsa.pub: id_rsa
 id_rsa:
 	ssh-keygen -f id_rsa -N ''
 
+##@ Fix
+.PHONY: format
+format: ##Format the clj files in jepsen.etcd.
+	cd jepsen.etcd && lein cljfmt fix
+
+
 ##@ Help
 .PHONY: help
 help: ## Display this help.
