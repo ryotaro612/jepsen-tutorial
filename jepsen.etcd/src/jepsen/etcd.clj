@@ -19,21 +19,6 @@
                "127.0.0.1:8381" {:client "http://172.20.0.4:2379"
                                  :peer "http://172.20.0.4:2380"
                                  :name "172.20.0.4"}})
-; https://jepsen-io.github.io/jepsen/
-(defn node-url
-  "An HTTP url for connecting to a node on a particular port."
-  [node port]
-  (str "http://" node ":" port))
-
-(defn peer-url
-  "The HTTP url for other peers to talk to a node."
-  [node]
-  (node-url node 2380))
-
-(defn client-url
-  "The HTTP url clients use to talk to a node."
-  [node]
-  (node-url node 2379))
 
 (defn initial-cluster
   "Constructs an initial cluster string for a test, like
@@ -55,7 +40,8 @@
   "Etcd DB for a particular version."
   [version]
   
-  (reify db/DB
+  (reify
+    db/DB
     (setup! [_ test node]
       (l/info node "installing etcd" version)
       (c/su
@@ -77,7 +63,7 @@
       (l/info node "tearing down etcd")
       (cu/stop-daemon! binary pidfile))
     db/LogFiles
-    (log-files [_ test node]
+    (log-files [_ test node-]
       [logfile])))
 
 ; setupで前のデータをリセットしたほうがいい
@@ -85,10 +71,6 @@
   "Given an options map from the command line runner (e.g. :nodes, :ssh,
   :concurrency, ...), constructs a test map."
   [opts]
-  #_(println opts, "Hello, World!")
-  #_(println (merge tests/noop-test
-         {:pure-generators true}
-         opts), "####")
   (db "")
   (merge tests/noop-test
          {
