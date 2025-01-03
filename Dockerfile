@@ -1,9 +1,10 @@
 # How to install etcd
 # https://github.com/etcd-io/etcd/releases
+# jepsen runs the shell commands after sudo.
 FROM debian:12-slim
 RUN apt update && \
     apt upgrade -y && \
-    apt install -y openssh-server curl && \
+    apt install -y openssh-server curl sudo && \
     ssh-keygen -A && \
     mkdir -p /run/sshd
 COPY entrypoint.sh id_rsa.pub /
