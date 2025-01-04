@@ -2,29 +2,31 @@
   (:require [clojure.tools.logging :as l]            
             [clojure.string :as str]
             [jepsen [client :as client]]
-            [verschlimmbesserung.core :as v]))
+            [verschlimmbesserung.core :as v]
+            [jepsen.etcd.etcd.client :as ec]))
 
 (defn r   [_ _] {:type :invoke, :f :read, :value nil})
 (defn w   [_ _] {:type :invoke, :f :write, :value (rand-int 5)})
 (defn cas [_ _] {:type :invoke, :f :cas, :value [(rand-int 5) (rand-int 5)]})
 
-
-(defrecord Client [node-map conn]
+(defrecord Client [node-map client]
   client/Client
   (open! [this test node]
-    (assoc this :conn (v/connect (-> node node-map :client)
-                                 {:timeout 5000})))
-
+    (assoc this :client (ec/endpoints->kv-client (map #(str "http://" %) (keys node-map)))))
+  
   (setup! [this test])
-
-  (invoke! [this test op]
-    ;; (l/info "invoke!" this)
-    ;; (l/info "invoke2!" node-map conn)    
+  
+  (invoke! [_ test op]
     (case (:f op)
-      :read (assoc op :type :ok, :value (v/get conn "foo"))))
+      :read (let [res (ec/get (.getBytes "foo") client 3000)
+                  value (if res (Integer/parseInt (new String (first res))))]
+              (l/info {:invoke-read value})
+              (assoc op :type :ok, :value value))
+      :write (do
+               (ec/put client 3000 "foo" (.getBytes (str (:value op))))
+               (assoc op :type :ok))
+      ))
 
   (teardown! [this test])
 
   (close! [_ test]))
-
-

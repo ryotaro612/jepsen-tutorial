@@ -28,17 +28,17 @@
           :db   (edb/map->Etcd {:node-map n/node-map})
           :pure-generators true
           :client (ec/map->Client {:node-map n/node-map})
-          :generator       (->> ec/r
+          :generator       (->> (gen/mix [ec/r ec/w])
                                 (gen/stagger 1)
                                 (gen/nemesis nil)
-                                (gen/time-limit 15))
+                                (gen/time-limit 60))
           }
          {:concurrency 5
           :leave-db-running? false
           :logging-json? false
           :nodes ["127.0.0.1:8379", "127.0.0.1:8380", "127.0.0.1:8381"]
           :test-count 1
-          :time-limit 60}
+          :time-limit 15}
          {:remote docker/docker}))
 
 (defn -main

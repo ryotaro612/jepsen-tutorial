@@ -6,6 +6,8 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  ;; https://mvnrepository.com/artifact/jepsen/jepsen
                  [jepsen/jepsen "0.3.7"]
+                 ;; https://mvnrepository.com/artifact/io.etcd/jetcd-core
+                 [io.etcd/jetcd-core "0.8.4"]
                  [verschlimmbesserung "0.1.3"]
                  ]
   :plugins [[dev.weavejester/lein-cljfmt "0.13.0"]]

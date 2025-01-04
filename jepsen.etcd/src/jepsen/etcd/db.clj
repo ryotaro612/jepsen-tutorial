@@ -48,4 +48,3 @@
   db/LogFiles
   (log-files [_ test node-]
     [logfile]))
-
