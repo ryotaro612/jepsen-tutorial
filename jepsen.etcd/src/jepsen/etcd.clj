@@ -27,7 +27,7 @@
           :db   (edb/map->Etcd {:node-map n/node-map})
           :pure-generators true
           :client (ec/map->Client {:node-map n/node-map})
-          :generator       (->> (gen/mix [ec/r ec/w])
+          :generator       (->> (gen/mix [ec/r ec/w ec/cas])
                                 (gen/stagger 1)
                                 (gen/nemesis nil)
                                 (gen/time-limit 60))

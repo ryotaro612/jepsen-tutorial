@@ -17,14 +17,22 @@
   
   (invoke! [_ test op]
     (case (:f op)
-      :read (let [res (ec/get (.getBytes "foo") client 3000)
+      :read (let [res (ec/get-etcd (.getBytes "foo") client 3000)
                   value (if res (Integer/parseInt (new String (first res))))]
               (l/info {:invoke-read value})
               (assoc op :type :ok, :value value))
       :write (do
-               (ec/put client 3000 (.getBytes "foo") (.getBytes (str (:value op))))
+               (ec/put! client 3000 (.getBytes "foo") (.getBytes (str (:value op))))
                (assoc op :type :ok))
-      ))
+
+      :cas (let [[old new] (:value op)]
+             (assoc op :type (if (ec/cas! client
+                                          3000
+                                          (.getBytes "foo")
+                                          (-> old str .getBytes)
+                                          (-> new str .getBytes))
+                               :ok
+                               :fail)))))
 
   (teardown! [this test])
 
