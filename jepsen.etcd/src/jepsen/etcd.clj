@@ -6,6 +6,7 @@
             [verschlimmbesserung.core :as v]
             [jepsen
              [cli :as cli]
+             [generator :as gen]             
              [control :as c]
              [db :as db]
              [tests :as tests]
@@ -26,7 +27,12 @@
           :os   debian/os
           :db   (edb/map->Etcd {:node-map n/node-map})
           :pure-generators true
-          :client (ec/map->Client nil)}
+          :client (ec/map->Client {:node-map n/node-map})
+          :generator       (->> ec/r
+                                (gen/stagger 1)
+                                (gen/nemesis nil)
+                                (gen/time-limit 15))
+          }
          {:concurrency 5
           :leave-db-running? false
           :logging-json? false
