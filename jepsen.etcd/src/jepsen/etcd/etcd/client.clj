@@ -6,7 +6,7 @@
            [java.nio.charset StandardCharsets]))
 
 (defn put
-  ""
+  "The type of k and v is byte[]."
   [client timeout-mills k v]
   (let [key-bytes (ByteSequence/from k)
         value-bytes (ByteSequence/from v)

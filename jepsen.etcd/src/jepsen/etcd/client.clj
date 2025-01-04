@@ -2,7 +2,6 @@
   (:require [clojure.tools.logging :as l]            
             [clojure.string :as str]
             [jepsen [client :as client]]
-            [verschlimmbesserung.core :as v]
             [jepsen.etcd.etcd.client :as ec]))
 
 (defn r   [_ _] {:type :invoke, :f :read, :value nil})
@@ -23,7 +22,7 @@
               (l/info {:invoke-read value})
               (assoc op :type :ok, :value value))
       :write (do
-               (ec/put client 3000 "foo" (.getBytes (str (:value op))))
+               (ec/put client 3000 (.getBytes "foo") (.getBytes (str (:value op))))
                (assoc op :type :ok))
       ))
 

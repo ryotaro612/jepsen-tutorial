@@ -3,7 +3,6 @@
             [clojure.string :as str]
             [clojure.java.io :as io]
             [jepsen.control.docker :as docker]
-            [verschlimmbesserung.core :as v]
             [jepsen
              [cli :as cli]
              [generator :as gen]             
