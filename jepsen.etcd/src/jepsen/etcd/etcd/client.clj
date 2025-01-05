@@ -18,12 +18,16 @@
 (defn get-etcd
   "k is key, client is kv-client, timeout-millis is timeout in milliseconds."
   [k client timeout-millis]
-  (let [key-bytes (ByteSequence/from k)
-        completable-future (.get client key-bytes)
-        get-response (.get completable-future timeout-millis TimeUnit/MILLISECONDS)
-        ]
-    (if (.getCount get-response)
-      (map #(-> % .getValue .getBytes) (.getKvs get-response)))))
+  (try
+    (let [key-bytes (ByteSequence/from k)
+          completable-future (.get client key-bytes)
+          get-response (.get completable-future timeout-millis TimeUnit/MILLISECONDS)]
+      (l/info "get-etcd2" k)
+      (let [temp (if (< 0 (.getCount get-response))
+                   (map #(-> % .getValue .getBytes) (.getKvs get-response)))]
+        (l/info "get-etcd3" k temp (.getCount get-response))
+        temp))
+    (catch Exception e (l/error (.getMessage e)))))
 
 (defn cas!
   ""

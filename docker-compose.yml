@@ -20,6 +20,20 @@ services:
     networks:
       etcd:
         ipv4_address: 172.20.0.4
+  etcd4:
+    image: jepsen-tutorial-etcd:latest
+    ports:
+      - 8382:2379
+    networks:
+      etcd:
+        ipv4_address: 172.20.0.5
+  etcd5:
+    image: jepsen-tutorial-etcd:latest
+    ports:
+      - 8383:2379
+    networks:
+      etcd:
+        ipv4_address: 172.20.0.6        
 networks:
   etcd:
     driver: bridge

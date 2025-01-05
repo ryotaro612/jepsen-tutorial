@@ -7,7 +7,9 @@
                  ;; https://mvnrepository.com/artifact/jepsen/jepsen
                  [jepsen/jepsen "0.3.7"]
                  ;; https://mvnrepository.com/artifact/io.etcd/jetcd-core
-                 [io.etcd/jetcd-core "0.8.4"]]
+                 [io.etcd/jetcd-core "0.8.4"]
+                 ;; https://mvnrepository.com/artifact/slingshot/slingshot
+                 [slingshot/slingshot "0.12.2"]]
   :plugins [[dev.weavejester/lein-cljfmt "0.13.0"]]
   :main jepsen.etcd
   :repl-options {:init-ns jepsen.etcd})

@@ -3,6 +3,7 @@
             [clojure.string :as str]
             [clojure.java.io :as io]
             [jepsen.control.docker :as docker]
+            [jepsen.checker.timeline :as timeline]            
             [jepsen
              [checker :as checker]
              [cli :as cli]
@@ -29,18 +30,23 @@
           :db   (edb/map->Etcd {:node-map n/node-map})
           :pure-generators true
           :client (ec/map->Client {:node-map n/node-map})
-          :checker         (checker/linearizable
-                             {:model     (model/cas-register)
-                              :algorithm :linear})          
-          :generator       (->> (gen/mix [ec/r ec/w ec/cas])
+          :checker (checker/compose
+                    {:perf   (checker/perf)
+                     :linear (checker/linearizable {:model     (model/cas-register)
+                                                    :algorithm :linear})
+                     :timeline (timeline/html)})
+          :generator       (->> (gen/mix [ec/r] #_[ec/r ec/w ec/cas])
                                 (gen/stagger 1)
                                 (gen/nemesis nil)
-                                (gen/time-limit 60))
-          }
+                                (gen/time-limit 15))}
          {:concurrency 5
           :leave-db-running? false
           :logging-json? false
-          :nodes ["127.0.0.1:8379", "127.0.0.1:8380", "127.0.0.1:8381"]
+          :nodes ["127.0.0.1:8379"
+                  "127.0.0.1:8380"
+                  "127.0.0.1:8381"
+                  "127.0.0.1:8382"
+                  "127.0.0.1:8383"]
           :test-count 1
           :time-limit 15}
          {:remote docker/docker}))
