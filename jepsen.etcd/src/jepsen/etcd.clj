@@ -3,11 +3,11 @@
             [clojure.string :as str]
             [clojure.java.io :as io]
             [jepsen.control.docker :as docker]
-            [jepsen.checker.timeline :as timeline]            
+            [jepsen.checker.timeline :as timeline]
             [jepsen
              [checker :as checker]
              [cli :as cli]
-             [generator :as gen]             
+             [generator :as gen]
              [control :as c]
              [db :as db]
              [tests :as tests]
@@ -16,7 +16,7 @@
             [jepsen.os.debian :as debian]
             [jepsen.etcd.client :as ec]
             [jepsen.etcd.db :as edb]
-            [knossos.model :as model]            
+            [knossos.model :as model]
             [jepsen.etcd.node :as n]))
 
                                         ; setupで前のデータをリセットしたほうがいい

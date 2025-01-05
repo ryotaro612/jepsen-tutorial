@@ -1,5 +1,5 @@
 (ns jepsen.etcd.client
-  (:require [clojure.tools.logging :as l]            
+  (:require [clojure.tools.logging :as l]
             [clojure.string :as str]
             [jepsen [client :as client]]
             [jepsen.etcd.etcd.client :as ec]))
@@ -12,9 +12,9 @@
   client/Client
   (open! [this test node]
     (assoc this :client (ec/endpoints->kv-client (map #(str "http://" %) (keys node-map)))))
-  
+
   (setup! [this test])
-  
+
   (invoke! [_ test op]
     (case (:f op)
       :read (let [res (ec/get-etcd (.getBytes "foo") client 3000)

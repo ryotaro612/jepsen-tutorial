@@ -11,5 +11,4 @@
    "127.0.0.1:8380" (make-container-address "172.20.0.3")
    "127.0.0.1:8381" (make-container-address "172.20.0.4")
    "127.0.0.1:8382" (make-container-address "172.20.0.5")
-   "127.0.0.1:8383" (make-container-address "172.20.0.6")
-   })
+   "127.0.0.1:8383" (make-container-address "172.20.0.6")})
