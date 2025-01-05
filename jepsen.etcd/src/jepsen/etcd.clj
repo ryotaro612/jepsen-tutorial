@@ -4,6 +4,7 @@
             [clojure.java.io :as io]
             [jepsen.control.docker :as docker]
             [jepsen
+             [checker :as checker]
              [cli :as cli]
              [generator :as gen]             
              [control :as c]
@@ -14,6 +15,7 @@
             [jepsen.os.debian :as debian]
             [jepsen.etcd.client :as ec]
             [jepsen.etcd.db :as edb]
+            [knossos.model :as model]            
             [jepsen.etcd.node :as n]))
 
                                         ; setupで前のデータをリセットしたほうがいい
@@ -27,6 +29,9 @@
           :db   (edb/map->Etcd {:node-map n/node-map})
           :pure-generators true
           :client (ec/map->Client {:node-map n/node-map})
+          :checker         (checker/linearizable
+                             {:model     (model/cas-register)
+                              :algorithm :linear})          
           :generator       (->> (gen/mix [ec/r ec/w ec/cas])
                                 (gen/stagger 1)
                                 (gen/nemesis nil)
