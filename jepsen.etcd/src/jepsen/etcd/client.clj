@@ -13,7 +13,8 @@
   (open! [this test node]
     (assoc this :client (ec/endpoints->kv-client (map #(str "http://" %) (keys node-map)))))
 
-  (setup! [this test])
+  (setup! [this test]
+    )
 
   (invoke! [_ test op]
     (case (:f op)
@@ -34,6 +35,7 @@
                                :ok
                                :fail)))))
 
-  (teardown! [this test])
+  (teardown! [_ test])
 
   (close! [_ test]))
+

@@ -12,9 +12,8 @@ ENV ETCD_VER=v3.5.17
 ENV ETCD_DIR=/opt/etcd
 RUN cat id_rsa.pub > /root/.ssh/authorized_keys && \
     rm id_rsa.pub && \
-    rm -f /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz && \
     mkdir -p $ETCD_DIR && \
-    curl -L https://github.com/etcd-io/etcd/releases/download/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz -o /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz && \
-    tar xzvf /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz -C $ETCD_DIR --strip-components=1 && \
-    rm -f /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
+    curl -L https://github.com/etcd-io/etcd/releases/download/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz -o /usr/src/etcd.tar.gz
+#	&& \
+ #   tar xzvf /usr/src/etcd-${ETCD_VER}-linux-amd64.tar.gz -C $ETCD_DIR --strip-components=1
 ENTRYPOINT ["/entrypoint.sh"]

@@ -35,10 +35,17 @@
                      :linear (checker/linearizable {:model     (model/cas-register)
                                                     :algorithm :linear})
                      :timeline (timeline/html)})
-          :generator       (->> (gen/mix [ec/r] #_[ec/r ec/w ec/cas])
-                                (gen/stagger 1)
-                                (gen/nemesis nil)
-                                (gen/time-limit 15))}
+          :generator       (->> (gen/mix [ec/r ec/w ec/cas])
+                                #_(gen/stagger 1)
+                                (gen/stagger 1/50)                                
+                                (gen/nemesis
+                                 (cycle [(gen/sleep 5)
+                                         {:type :info, :f :start}
+                                         (gen/sleep 5)
+                                         {:type :info, :f :stop}]))
+                                #_(gen/nemesis nil)
+                                (gen/time-limit 30))}
+         
          {:concurrency 5
           :leave-db-running? false
           :logging-json? false

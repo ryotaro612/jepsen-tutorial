@@ -28,7 +28,9 @@
   (setup! [_ test node]
     (l/info node "installing etcd")
     (c/su
-     (cu/start-daemon!
+      (c/exec :rm :-rf etcd-dir)
+      (cu/install-archive! "file:///usr/src/etcd.tar.gz" etcd-dir)
+      (cu/start-daemon!
       {:logfile logfile
        :pidfile pidfile
        :chdir   etcd-dir}
