@@ -13,6 +13,4 @@ create table if not exists dtm_app.account(
   key(create_time),
   key(update_time)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
-insert into dtm_app.account (user_id, balance)
-values ('alice', 10000),
-  ('bob', 10000);
+insert into dtm_app.account (user_id, balance) values ('alice', 10000);
