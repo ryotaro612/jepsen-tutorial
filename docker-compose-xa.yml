@@ -1,0 +1,22 @@
+services:
+  dtm:
+    image: yedf/dtm:1.18
+    ports:
+      - 36789:36789 # HTTP
+      - 36790:36790 # gRPC
+    environment:
+      IS_DOCKER: 1
+      STORE_DRIVER: mysql
+      STORE_HOST: dtm-db
+      STORE_USER: root
+      STORE_PASSWORD: root
+      STORE_PORT: 3306
+  dtm-db:
+    build:
+      context: dtm-db
+    ports:
+      - 8306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+
+      
