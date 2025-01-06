@@ -3,14 +3,16 @@
 etcdup: buildetcd ##Build the etcd cluster then run it.
 	docker compose up -d
 
+
+xa_docker_compose_file = docker-compose-xa.yml
 etcddown: ##Down the etcd cluster.
 	docker compose down -v
 
 xaup: xadown buildappdb
-	docker compose -f docker-compose-xa.yml build
-	docker compose -f docker-compose-xa.yml up -d
+	docker compose -f $(xa_docker_compose_file) build
+	docker compose -f $(xa_docker_compose_file) up -d
 xadown:
-	docker compose -f docker-compose-xa.yml down -v
+	docker compose -f $(xa_docker_compose_file) down -v
 ##@ Build
 .PHONY:buildetcd
 buildetcd: ##Build the Docker image of etcd.
