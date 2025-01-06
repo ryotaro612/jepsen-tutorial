@@ -1,16 +1,16 @@
+// package main
 package main
 
 import (
 	"database/sql"
-	"log/slog"
-	"net/http"
-	"os"
-	"strconv"
-
 	"github.com/dtm-labs/client/dtmcli"
 	"github.com/dtm-labs/client/dtmcli/dtmimp"
 	"github.com/dtm-labs/dtm/dtmutil"
 	"github.com/gin-gonic/gin"
+	"github.com/ryotaro612/jepsen-tutorial/xabank/internal"
+	"net/http"
+	"os"
+	"strconv"
 )
 
 type Transaction struct {
@@ -20,9 +20,8 @@ type Transaction struct {
 
 func main() {
 	var err error
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level: slog.LevelDebug,
-	}))
+	logger := internal.NewLogger(true)
+
 	defer func() {
 		if err != nil {
 			logger.Error("error", "error", err)
