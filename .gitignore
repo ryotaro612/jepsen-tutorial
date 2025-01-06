@@ -2,6 +2,7 @@
 jepsen.etcd/store
 # Emacs
 *~
+\#*
 
 # ssh
 id_rsa
