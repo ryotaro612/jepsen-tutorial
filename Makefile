@@ -6,10 +6,19 @@ etcdup: buildetcd ##Build the etcd cluster then run it.
 etcddown: ##Down the etcd cluster.
 	docker compose down -v
 
+xaup: xadown buildappdb
+	docker compose -f docker-compose-xa.yml build
+	docker compose -f docker-compose-xa.yml up -d
+xadown:
+	docker compose -f docker-compose-xa.yml down -v
 ##@ Build
 .PHONY:buildetcd
 buildetcd: ##Build the Docker image of etcd.
 	docker build --load -t jepsen-tutorial-etcd:latest .
+
+.PHONY:buildappdb
+buildappdb: ##Build the Docker image of appdb.
+	docker build --load -t jepsen-tutorial-app-db:latest ./app-db
 
 .PHONY: clean
 clean:## Clean up
